@@ -1,0 +1,55 @@
+﻿@model ProjectViewModel
+
+@using ICZProject.Models
+
+@{
+    ViewBag.Title = "Novy projekt"; @* TODO: Resources *@
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Pridajte novy projekt</h2>
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.Partial("FormMessages")
+    @Html.AntiForgeryToken()
+
+    @* TODO: Make it nicer *@
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.ProjectId)
+        </div>
+        <div class="col-md-6">
+            @Html.EditorFor(model => model.ProjectId)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Name)
+        </div>
+        <div class="col-md-6">
+            @Html.EditorFor(model => model.Name)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Abbreviation)
+        </div>
+        <div class="col-md-6">
+            @Html.EditorFor(model => model.Abbreviation)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Customer)
+        </div>
+        <div class="col-md-6">
+            @Html.EditorFor(model => model.Customer)
+        </div>
+    </div>
+
+    <button type="submit">Pridaj</button>
+}

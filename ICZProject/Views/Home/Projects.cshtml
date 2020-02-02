@@ -1,0 +1,28 @@
+﻿@model ProjectsViewModel
+
+@using ICZProject.Models
+
+@{
+    ViewBag.Title = "Zoznam projektov";
+}
+<br />
+<br />
+
+@foreach (var project in Model.Projects)
+{
+    <div class="row">
+        <div class="col-sm-3">
+            @project.ProjectId
+        </div>
+        <div class="col-sm-3">
+            @project.Name
+        </div>
+        <div class="col-sm-3">
+            @project.Abbreviation
+        </div>
+        <div class="col-sm-3">
+            @project.Customer
+        </div>
+    </div>
+    <br />
+}

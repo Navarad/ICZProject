@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<projects>
+  <project id="prj1">
+    <name>Informačný systém firmy ABC</name>
+    <abbreviation>IS-ABC</abbreviation>
+    <customer>ABC, s. r. o.</customer>
+  </project>
+  <project id="prj2">
+    <name>Importny modul ISIS</name>
+    <abbreviation>Import-ISIS</abbreviation>
+    <customer>Homer Simpson</customer>
+  </project>
+  <project id="prj3">
+    <name>Portacia IS-VAK na Oracle</name>
+    <abbreviation>OracleVAK</abbreviation>
+    <customer>VAK, s. p.</customer>
+  </project>
+  <project id="ass">
+    <name>sfd</name>
+    <abbreviation>sd</abbreviation>
+    <customer>asd</customer>
+  </project>
+</projects>
