@@ -11,5 +11,8 @@ namespace ICZProject.Services
     {
         List<ProjectModel> ListProjects();
         void Create(ProjectModel model);
+        void Delete(string projectId);
+        void Update(ProjectModel model);
+        ProjectModel Get(string id);
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<projects>
+  <project id="prj1">
+    <name>1 tralalľa náčas</name>
+    <abbreviation>2</abbreviation>
+    <customer>3</customer>
+  </project>
+  <project id="prj2">
+    <name>a</name>
+    <abbreviation>b</abbreviation>
+    <customer>c</customer>
+  </project>
+  <project id="ass">
+    <name>aa1</name>
+    <abbreviation>bb1</abbreviation>
+    <customer>cc1</customer>
+  </project>
+  <project id="prj34">
+    <name>q</name>
+    <abbreviation>w</abbreviation>
+    <customer>e</customer>
+  </project>
+</projects>

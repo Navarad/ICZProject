@@ -1,6 +1,7 @@
 ﻿@model ProjectsViewModel
 
 @using ICZProject.Models
+@using ICZProject.Controllers
 
 @{
     ViewBag.Title = "Zoznam projektov";
@@ -11,17 +12,30 @@
 @foreach (var project in Model.Projects)
 {
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             @project.ProjectId
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             @project.Name
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             @project.Abbreviation
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             @project.Customer
+        </div>
+        <div class="col-sm-2">
+            @using (Html.BeginForm(nameof(HomeController.DeleteProject), "Home", FormMethod.Post))
+            {
+                @Html.Partial("FormMessages")
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="@nameof(DeleteProjectViewModel.ProjectId)" value="@project.ProjectId"/>
+                <button type="submit">Vymaz projekt</button>
+            }
+        </div>
+        <div class="col-sm-2">
+            @Html.ActionLink("Edituj", nameof(HomeController.UpdateProject), "Home", new { id = project.ProjectId }, null)
         </div>
     </div>
     <br />

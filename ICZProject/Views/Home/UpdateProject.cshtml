@@ -1,0 +1,49 @@
+﻿@model UpdateProjectViewModel
+
+@using ICZProject.Models
+
+@{
+    ViewBag.Title = "Upravit projekt";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Upravte projekt</h2>
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.Partial("FormMessages")
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.ProjectId)
+
+    @* TODO: Make it nicer *@
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Name)
+        </div>
+        <div class="col-md-6">
+            @Html.EditorFor(model => model.Name)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Abbreviation)
+        </div>
+        <div class="col-md-6">
+            @Html.EditorFor(model => model.Abbreviation)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(model => model.Customer)
+        </div>
+        <div class="col-md-6">
+            @Html.EditorFor(model => model.Customer)
+        </div>
+    </div>
+
+    <button type="submit">Uprav</button>
+}
