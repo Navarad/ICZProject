@@ -15,7 +15,6 @@
 @using (Html.BeginForm())
 {
     @Html.Partial("FormMessages")
-    @Html.AntiForgeryToken()
 
     @Html.HiddenFor(model => model.ProjectId)
 

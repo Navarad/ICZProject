@@ -8,6 +8,14 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h2>Welcome to my page</h2>
+        <h4>Prosim zadajte heslo na pristup</h4>
     </div>
 </div>
+
+@using (Html.BeginForm())
+{
+    @Html.Partial("FormMessages")
+
+    @Html.EditorFor(a => a.Password)
+    <button type="submit">Overit</button>
+}

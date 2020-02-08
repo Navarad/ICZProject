@@ -1,33 +1,86 @@
 ﻿using ICZProject.Models;
 using ICZProject.ServiceModels;
 using ICZProject.Services;
+using Microsoft.Owin.Security;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Security.Claims;
 using System.Web.Mvc;
+using System.Web;
+using Microsoft.AspNet.Identity;
+using Serilog;
+using System.Collections.Generic;
 
 namespace ICZProject.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
+        #region Init
+
         private readonly IProjectService ProjectService;
+        private readonly ILogger Log;
+        private readonly IAuthenticationManager AuthenticationManager;
+        private readonly IConfigService ConfigService;
 
         public HomeController()
         {
         }
 
-        public HomeController(IProjectService projectService)
+        public HomeController(IProjectService projectService, ILogger log, IAuthenticationManager authenticationManager, IConfigService configService)
         {
             this.ProjectService = projectService;
+            this.Log = log;
+            this.AuthenticationManager = authenticationManager;
+            this.ConfigService = configService;
         }
 
+        #endregion
+
+        #region Index - Login
+
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult Index()
         {
-            var viewModel = new IndexViewModel { ProjectId = "prj3" };
+            if (Request?.IsAuthenticated ?? false)
+                return RedirectToAction(nameof(Projects));
+
+            var viewModel = new IndexViewModel();
             return View(viewModel);
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult Index(IndexViewModel model)
+        {
+            if (model.Password != ConfigService.MasterPassword)
+            {
+                ModelState.AddModelError(nameof(IndexViewModel.Password), "Nespravne heslo");
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var userIdentity = new ClaimsIdentity(DefaultAuthenticationTypes.ApplicationCookie);
+                    AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = true }, userIdentity);
+                    return RedirectToAction(nameof(Projects));
+                }
+                catch (Exception ex)
+                {
+                    var message = "Something went wrong with your login, please try again later";
+                    ModelState.AddModelError(string.Empty, message);
+                    Log.Error(ex, message);
+                }
+            }
+
+            var viewModel = new IndexViewModel();
+            return View(viewModel);
+        }
+
+        #endregion
+
+        #region Create Project
 
         [HttpGet]
         public ActionResult CreateProject()
@@ -36,7 +89,6 @@ namespace ICZProject.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult CreateProject(ProjectViewModel model)
         {
             if (ModelState.IsValid)
@@ -51,14 +103,23 @@ namespace ICZProject.Controllers
                     });
                     ViewBag._SuccessMessage = "Uspesne ste pridali novy projekt";
                 }
-                catch (Exception)
+                catch (ArgumentException)
                 {
-                    //TODO: Log
+                    ModelState.AddModelError(nameof(ProjectViewModel.ProjectId), "Project with same name already exists");
+                }
+                catch (Exception ex)
+                {
+                    var message = "Something went wrong with project create, please try again later";
+                    Log.Error(ex, message);
                     return RedirectToAction(nameof(CreateProject));
                 }
             }
             return View();
         }
+
+        #endregion
+
+        #region List Projects
 
         [HttpGet]
         public ActionResult Projects()
@@ -76,38 +137,52 @@ namespace ICZProject.Controllers
                 Name = a.Name,
                 Abbreviation = a.Abbreviation,
                 Customer = a.Customer
-            })?.ToList();
+            })?.ToList() ?? new List<ProjectViewModel>();
         }
 
+        #endregion
+
+        #region Delete Project
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult DeleteProject(DeleteProjectViewModel model)
         {
+            if (ProjectService.Get(model.ProjectId) == null)
+                return HttpNotFound();
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     ProjectService.Delete(model.ProjectId);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //TODO: Log
+                    var message = "Something went wrong with project delete, please try again later";
+                    Log.Error(ex, message);
                 }
             }
             // TODO: pass success message
             return RedirectToAction(nameof(Projects));
         }
 
+        #endregion
+
+        #region Update Project
+
         [HttpGet]
         public ActionResult UpdateProject(string id)
         {
-            var viewModel = Populate(id);
+            var model = ProjectService.Get(id);
+            if (model == null)
+                return HttpNotFound();
+
+            var viewModel = Populate(model);
             return View(viewModel);
         }
 
-        private UpdateProjectViewModel Populate(string id)
+        private UpdateProjectViewModel Populate(ProjectModel model)
         {
-            var model = ProjectService.Get(id);
             var viewModel = new UpdateProjectViewModel
             {
                 ProjectId = model.ProjectId,
@@ -119,9 +194,12 @@ namespace ICZProject.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult UpdateProject(UpdateProjectViewModel model)
         {
+            var storedModel = ProjectService.Get(model.ProjectId);
+            if (storedModel == null)
+                return HttpNotFound();
+
             if (ModelState.IsValid)
             {
                 try
@@ -135,14 +213,17 @@ namespace ICZProject.Controllers
                     });
                     ViewBag._SuccessMessage = "Uspesne ste upravili projekt";
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //TODO: Log
+                    var message = "Something went wrong with project update, please try again later";
+                    Log.Error(ex, message);
                     return RedirectToAction(nameof(UpdateProject));
                 }
             }
-            var viewModel = Populate(model.ProjectId);
+            var viewModel = Populate(storedModel);
             return View(viewModel);
         }
+
+        #endregion
     }
 }

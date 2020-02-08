@@ -10,14 +10,9 @@
     <abbreviation>b</abbreviation>
     <customer>c</customer>
   </project>
-  <project id="ass">
-    <name>aa1</name>
-    <abbreviation>bb1</abbreviation>
-    <customer>cc1</customer>
-  </project>
-  <project id="prj34">
-    <name>q</name>
-    <abbreviation>w</abbreviation>
-    <customer>e</customer>
+  <project id="prj4">
+    <name>a</name>
+    <abbreviation>aa</abbreviation>
+    <customer>a</customer>
   </project>
 </projects>

@@ -28,7 +28,6 @@
             @using (Html.BeginForm(nameof(HomeController.DeleteProject), "Home", FormMethod.Post))
             {
                 @Html.Partial("FormMessages")
-                @Html.AntiForgeryToken()
 
                 <input type="hidden" name="@nameof(DeleteProjectViewModel.ProjectId)" value="@project.ProjectId"/>
                 <button type="submit">Vymaz projekt</button>

@@ -8,7 +8,8 @@ namespace ICZProject.Models
 {
     public class IndexViewModel
     {
-        public string ProjectId { get; set; }
+        [Display(Name = "Heslo")]
+        public string Password { get; set; }
     }
 
     public class ProjectViewModel
